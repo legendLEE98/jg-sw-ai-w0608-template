@@ -136,7 +136,7 @@ int insertSortedLL(LinkedList *ll, int item)
 				// next값이 없을 경우
 				if (headNode->next == NULL) {
 					headNode->next = ln;
-					ll->size += 1;
+					ll->size += 1;  
 
 					return ll->size;
 				} else if (headNode->next->item < ln->item) { // 현재 값이 head값의 next보다 큰 경우
