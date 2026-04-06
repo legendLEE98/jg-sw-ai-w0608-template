@@ -87,7 +87,6 @@ int main()
 		case 3:
 			printf("정렬된 연결 리스트의 결과는 다음과 같습니다: ");
 			printList(&ll);
-			removeAllItems(&ll);
 			break;
 		case 0:
 			removeAllItems(&ll);
