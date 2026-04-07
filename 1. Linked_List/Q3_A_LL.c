@@ -84,9 +84,60 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
+// 끝으로 보내는 로직
 void moveOddItemsToBack(LinkedList *ll)
 {
-	/* add your code here */
+	// 이론
+	// 이전 값
+	ListNode *prev = NULL;
+	// 현재 값
+	ListNode *cur = ll->head;
+
+	// 테일 초기값
+	ListNode *tailHead = NULL;
+	// 꼬리값 
+	ListNode *tail = NULL;
+
+	while (cur != NULL) {
+		// 짝수 일 경우
+		if (cur->item % 2 == 0) {
+			prev = cur;
+			cur = cur->next;
+
+			continue;
+		} else // 홀수 일 경우
+		{
+			// 우선 홀수 노드 자체가 없을 때
+			if (tailHead == NULL) {
+				tailHead = cur;
+				tail = cur;
+			}
+
+			// 현재 값이 홀수일 경우
+				if (prev != NULL) {
+					prev->next = cur->next;
+					tail->next = cur;
+					tail = cur;          // tail = tail->next 대신
+					cur = prev->next;    // 이미 끊어낸 후의 next
+					tail->next = NULL;   // 순환 방지
+				} else if (prev == NULL) { // 홀수이면서, prev가 Null일 경우
+				ll->head = cur->next;
+				tail = cur;
+				cur = cur->next;
+
+				continue;
+			}
+		}
+	}
+	
+	if (prev != NULL) {
+		tail->next = NULL;
+		if (tailHead != NULL) {
+			prev->next = tailHead;
+		}
+	} else {
+		ll->head = tailHead;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -178,7 +229,7 @@ int insertNode(LinkedList *ll, int index, int value){
 	return -1;
 }
 
-
+// 링크드리스트 ll 이랑 인덱스값 받음.
 int removeNode(LinkedList *ll, int index){
 
 	ListNode *pre, *cur;
