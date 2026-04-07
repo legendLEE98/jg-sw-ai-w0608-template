@@ -11,12 +11,14 @@ Purpose: Implementing the required functions for Question 2 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
+// 마찬가지로 ListNode 갖고 있음
 typedef struct _listnode
 {
 	int item;
 	struct _listnode *next;
 } ListNode;			// You should not change the definition of ListNode
 
+// 링크드 리스트 갖고 있음.
 typedef struct _linkedlist
 {
 	int size;
@@ -26,7 +28,8 @@ typedef struct _linkedlist
 
 //////////////////////// function prototypes /////////////////////////////////////
 
-// You should not change the prototype of this function
+// 함수 선언부
+// 구현해야 하는 함수
 void alternateMergeLinkedList(LinkedList *ll1, LinkedList *ll2);
 
 void printList(LinkedList *ll);
@@ -64,22 +67,22 @@ int main()
 		switch (c)
 		{
 		case 1:
-			printf("Input an integer that you want to add to the linked list 1: ");
+			printf("연결 리스트 1에 추가할 정수를 입력하세요: ");
 			scanf("%d", &i);
 			j = insertNode(&ll1, ll1.size, i);
 			printf("Linked list 1: ");
 			printList(&ll1);
 			break;
 		case 2:
-			printf("Input an integer that you want to add to the linked list 2: ");
+			printf("연결 리스트 2에 추가할 정수를 입력하세요: ");
 			scanf("%d", &i);
 			j = insertNode(&ll2, ll2.size, i);
 			printf("Linked list 2: ");
 			printList(&ll2);
 			break;
 		case 3:
-		    printf("The resulting linked lists after merging the given linked list are:\n");
-			alternateMergeLinkedList(&ll1, &ll2); // You need to code this function
+		    printf("주어진 연결 리스트를 병합한 후 생성되는 연결 리스트는 다음과 같습니다:\n");
+			alternateMergeLinkedList(&ll1, &ll2); // 구현해야 하는 함수
 			printf("The resulting linked list 1: ");
 			printList(&ll1);
 			printf("The resulting linked list 2: ");
@@ -101,9 +104,26 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void alternateMergeLinkedList(LinkedList *ll1, LinkedList *ll2)
-{
-    /* add your code here */
+// findNode가 필요한가?
+void alternateMergeLinkedList(LinkedList *ll1, LinkedList *ll2) {
+	ListNode *curNode = ll1->head;
+	ListNode *ll1Next;
+
+	while (curNode != NULL && ll2->head != NULL) {
+		// next값 기록
+		ll1Next = curNode->next;
+
+		// ll2의 값을 next값으로 지정
+		curNode->next = ll2->head;
+		// 이어서 ll2의 head값을 head의 next값으로 지정
+		ll2->head = ll2->head->next;
+
+		// 아까 기록해둔 ll1Next값을 curNode.next로 지정
+		curNode->next->next = ll1Next;
+
+		// 최신화
+		curNode = curNode->next->next;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -163,23 +183,29 @@ ListNode *findNode(LinkedList *ll, int index){
 	return temp;
 }
 
+// 이거 해석을 해야 내가 해야할 기능을 이해할 수 있을듯
 int insertNode(LinkedList *ll, int index, int value){
-
+	// pre / cur 포인터 listnode 변수 선언
 	ListNode *pre, *cur;
 
+	// 인덱스가 Null이거나, 0보다 작거나, ll.size + 1의 크기가 index보다 작거나
 	if (ll == NULL || index < 0 || index > ll->size + 1)
 		return -1;
 
-	// If empty list or inserting first node, need to update head pointer
+	// 리스트가 비어 있거나 첫 번째 노드를 삽입하는 경우, 헤드 포인터를 업데이트해야 합니다.
+
+	// 헤드 Null일경우 혹은 index가 0일 경우
 	if (ll->head == NULL || index == 0){
+		// 현재값을 헤드로 선언
 		cur = ll->head;
+		// 현재값 힙에 저장
 		ll->head = malloc(sizeof(ListNode));
+
 		ll->head->item = value;
 		ll->head->next = cur;
 		ll->size++;
 		return 0;
 	}
-
 
 	// Find the nodes before and at the target position
 	// Create a new node and reconnect the links
